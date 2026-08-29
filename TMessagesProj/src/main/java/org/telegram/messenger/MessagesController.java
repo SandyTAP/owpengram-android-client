@@ -501,7 +501,7 @@ public class MessagesController extends BaseController implements NotificationCe
 
     public boolean enableJoined;
     public String linkPrefix;
-    // OwpenGram: the server's help.getAppConfig advertises owpengram=true. Used to
+    // LocalGram: the server's help.getAppConfig advertises owpengram=true. Used to
     // treat links on this account's linkPrefix host as internal owpg links (not the
     // official Telegram network, and not other forks). Mirrors the desktop
     // OwpengramAccountHost gate on appConfig().get<bool>("owpengram").
@@ -2684,7 +2684,7 @@ public class MessagesController extends BaseController implements NotificationCe
             TLRPC.TL_jsonObjectValue value = object.value.get(a);
             switch (value.key) {
                 case "owpengram": {
-                    // OwpenGram self-hosted server marker (true/"true"). See owpengramServer field.
+                    // LocalGram self-hosted server marker (true/"true"). See owpengramServer field.
                     sawOwpengram = true;
                     boolean val = (value.value instanceof TLRPC.TL_jsonBool && ((TLRPC.TL_jsonBool) value.value).value)
                             || (value.value instanceof TLRPC.TL_jsonString && "true".equalsIgnoreCase(((TLRPC.TL_jsonString) value.value).value));
@@ -5056,7 +5056,7 @@ public class MessagesController extends BaseController implements NotificationCe
             }
         }
 
-        // Clear the OwpenGram marker if the server stopped advertising it.
+        // Clear the LocalGram marker if the server stopped advertising it.
         if (!sawOwpengram && owpengramServer) {
             owpengramServer = false;
             editor.putBoolean("owpengramServer", false);
@@ -5878,7 +5878,7 @@ public class MessagesController extends BaseController implements NotificationCe
         TLRPC.TL_userForeign_old2 user = new TLRPC.TL_userForeign_old2();
         user.phone = "333";
         user.id = 333000;
-        user.first_name = "OwpenGram";
+        user.first_name = "LocalGram";
         user.last_name = "";
         user.status = null;
         user.photo = new TLRPC.TL_userProfilePhotoEmpty();
@@ -5888,7 +5888,7 @@ public class MessagesController extends BaseController implements NotificationCe
         user.phone = "42777";
         user.id = 777000;
         user.verified = true;
-        user.first_name = "OwpenGram";
+        user.first_name = "LocalGram";
         user.last_name = "Notifications";
         user.status = null;
         user.photo = new TLRPC.TL_userProfilePhotoEmpty();
@@ -6967,6 +6967,14 @@ public class MessagesController extends BaseController implements NotificationCe
             }
         } else {
             if (!fromCache) {
+                // Сервер шлёт bot_can_edit только в users.getFullUser/users.getUsers.
+                // Прочие ответы (история, диалоги, контакты) присылают того же бота без
+                // этого флага и здесь бы затёрли закэшированное значение — из-за чего
+                // карандаш редактирования бота (ProfileActivity) мелькал и пропадал.
+                // Сохраняем ранее известный флаг, если входящий (неполный) юзер его не принёс.
+                if (oldUser != null && user.bot && oldUser.bot_can_edit && !user.bot_can_edit) {
+                    user.bot_can_edit = true;
+                }
                 users.put(user.id, user);
                 if (user.id == getUserConfig().getClientUserId()) {
                     getUserConfig().setCurrentUser(user);
@@ -6979,6 +6987,9 @@ public class MessagesController extends BaseController implements NotificationCe
             } else if (oldUser == null) {
                 users.put(user.id, user);
             } else if (oldUser.min) {
+                if (oldUser.bot_can_edit && !user.bot_can_edit) {
+                    user.bot_can_edit = true;
+                }
                 if (oldUser.bot) {
                     if (oldUser.username != null) {
                         user.username = oldUser.username;

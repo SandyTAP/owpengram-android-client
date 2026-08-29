@@ -25,14 +25,15 @@ public class OwpengramServers {
 
     public static final String ID_OWPENGRAM = "owpengram";
     public static final String ID_TELEGRAM  = "telegram";
+    public static final String ID_LOCALGRAM = "localgram";
 
-    /** Public repository of the OwpenGram server, opened from the settings entry. */
+    /** Public repository of the LocalGram server, opened from the settings entry. */
     public static final String SERVER_REPO_URL = "https://github.com/owpengram/owpengram-server";
 
     private static final String DEFAULT_HOST = "152.89.254.50";
     private static final int    DEFAULT_PORT = 2398;
 
-    // OwpenGram's own production server RSA key.
+    // LocalGram's own production server RSA key.
     static final String OWPENGRAM_RSA_KEY =
         "-----BEGIN RSA PUBLIC KEY-----\n" +
         "MIIBCgKCAQEAxUi0fsjiop7kTI+c+ATHwIs+XPcircj9WL/tNASH45/phiIvxhPU\n" +
@@ -44,6 +45,19 @@ public class OwpengramServers {
         "-----END RSA PUBLIC KEY-----";
     // fingerprint == 0 -> native layer derives it from the PEM (see ConnectionsManager::applyServerConfig).
     static final long OWPENGRAM_RSA_FINGERPRINT = 0;
+
+    // LocalGram's own self-hosted server RSA key.
+    static final String LOCALGRAM_RSA_KEY =
+        "-----BEGIN RSA PUBLIC KEY-----\n" +
+        "MIIBCgKCAQEAwwXTIUP6C632tGIPmQmxanAy+0MErbbMG/kHqmGg8DEpjPOR1Zj8\n" +
+        "t3W+xHper8QPvjEs1Cdlmonmb9LX9LxAQEGEp7LRK8DOH+0y9HIGuc0tntcPspzk\n" +
+        "6sC6giN5eVdUD8f74IUfEawbjuhu4E3P9BQyDqZ78KD6lgmHeX5dH4VTGKD2pcuB\n" +
+        "OHzD7LsGq+0NXAJGCCY0edGF9wRRQTsgGL+hjYZhwuu72/06/d32+ZdaIBIlqorg\n" +
+        "0WNO7CbIWqPimQAOEfRIky9kPze+olTmk1kbYWY8w4rZTYVE7xMbzOEO4mMlAncJ\n" +
+        "pNSgid1Sheqoxw2pSy51X+ChJssNKq2hIQIDAQAB\n" +
+        "-----END RSA PUBLIC KEY-----";
+    // fingerprint == 0 -> native layer derives it from the PEM.
+    static final long LOCALGRAM_RSA_FINGERPRINT = 0;
 
     // Official Telegram production RSA key (restored from original Android source)
     static final String TELEGRAM_RSA_KEY =
@@ -62,14 +76,14 @@ public class OwpengramServers {
     public static OwpengramServer owpengramServer() {
         OwpengramServer s = new OwpengramServer();
         s.id                 = ID_OWPENGRAM;
-        s.name               = "OwpenGram";
-        s.description        = "This is a test OwpenGram server.";
+        s.name               = "LocalGram";
+        s.description        = "This is a test LocalGram server.";
         s.host               = DEFAULT_HOST;
         s.port               = DEFAULT_PORT;
         s.isOfficial         = true;
         s.isTelegram         = false;
         s.multiDc            = false;
-        s.mainDcId           = 1;
+        s.mainDcId           = 2;
         s.rsaPublicKey       = OWPENGRAM_RSA_KEY;
         s.rsaKeyFingerprint  = OWPENGRAM_RSA_FINGERPRINT;
         return s;
@@ -91,12 +105,29 @@ public class OwpengramServers {
         return s;
     }
 
+    public static OwpengramServer localgramServer() {
+        OwpengramServer s = new OwpengramServer();
+        s.id                 = ID_LOCALGRAM;
+        s.name               = "LocalGram";
+        s.description        = "Testt self-hosted LocalGram server.";
+        s.host               = "192.168.0.100";
+        s.port               = 2398;
+        s.isOfficial         = true;
+        s.isTelegram         = false;
+        s.multiDc            = false;
+        s.mainDcId           = 2;
+        s.rsaPublicKey       = LOCALGRAM_RSA_KEY;
+        s.rsaKeyFingerprint  = LOCALGRAM_RSA_FINGERPRINT;
+        return s;
+    }
+
     // --- Server list ---
 
     public static List<OwpengramServer> listServers() {
         List<OwpengramServer> result = new ArrayList<>();
         result.add(telegramServer());
         result.add(owpengramServer());
+        result.add(localgramServer());
         result.addAll(loadCustomServers());
         return result;
     }
@@ -235,7 +266,7 @@ public class OwpengramServers {
     /**
      * Whether the account's current server is the official Telegram network.
      * Used to hide Telegram-specific help entries (Ask a Question, Telegram FAQ /
-     * Features, Privacy Policy) on OwpenGram and other servers, where they don't apply.
+     * Features, Privacy Policy) on LocalGram and other servers, where they don't apply.
      */
     public static boolean serverIsOfficialTelegram(int accountNum) {
         OwpengramServer s = getServerForAccount(accountNum);

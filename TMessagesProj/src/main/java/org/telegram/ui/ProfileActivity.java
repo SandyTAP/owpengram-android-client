@@ -4524,8 +4524,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.TelegramFaqUrl));
             } else if (position == policyRow) {
                 Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.PrivacyPolicyUrl));
-            } else if (position == owpengramRow) {
-                Browser.openUrl(getParentActivity(), org.telegram.owpengram.OwpengramServers.SERVER_REPO_URL);
             } else if (position == sendLogsRow) {
                 sendLogs(getParentActivity(), false);
             } else if (position == sendLastLogsRow) {
@@ -10624,7 +10622,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 devicesSectionRow = rowCount++;
                 // Only show the Premium section (Premium/Stars/TON/Business/Gifting)
                 // for servers that actually implement these features (Telegram).
-                // OwpenGram and custom single-servers don't, so hide it.
+                // LocalGram and custom single-servers don't, so hide it.
                 boolean serverPremium = org.telegram.owpengram.OwpengramServers.serverSupportsPremium(currentAccount);
                 if (serverPremium && !getMessagesController().premiumFeaturesBlocked()) {
                     premiumRow = rowCount++;
@@ -10645,11 +10643,13 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (premiumRow >= 0 || starsRow >= 0 || tonRow >= 0 || businessRow >= 0 || premiumGiftingRow >= 0) {
                     premiumSectionsRow = rowCount++;
                 }
-                helpHeaderRow = rowCount++;
-                questionRow = rowCount++;
-                faqRow = rowCount++;
-                policyRow = rowCount++;
-                owpengramRow = rowCount++;
+                // Help section (Ask a Question / FAQ / Privacy Policy) removed entirely.
+                helpHeaderRow = -1;
+                questionRow = -1;
+                faqRow = -1;
+                policyRow = -1;
+                // owpengramRow removed: no GitHub developer link
+                owpengramRow = -1;
                 if (BuildVars.LOGS_ENABLED || BuildVars.DEBUG_PRIVATE_VERSION) {
                     helpSectionCell = rowCount++;
                     debugHeaderRow = rowCount++;
@@ -13826,8 +13826,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         textCell.setTextAndIcon(LocaleController.getString(R.string.TelegramFAQ), R.drawable.msg2_help, true);
                     } else if (position == policyRow) {
                         textCell.setTextAndIcon(LocaleController.getString(R.string.PrivacyPolicy), R.drawable.msg2_policy, true);
-                    } else if (position == owpengramRow) {
-                        textCell.setTextAndIcon("OwpenGram", R.drawable.github_logo, false);
                     } else if (position == sendLogsRow) {
                         textCell.setText(LocaleController.getString(R.string.DebugSendLogs), true);
                     } else if (position == sendLastLogsRow) {
@@ -14769,10 +14767,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     new SearchResult(400, getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language"),
                     new SearchResult(405, getString(R.string.ShowTranslateButton), getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/show-button"),
                     MessagesController.getInstance(currentAccount).getTranslateController().isContextTranslateEnabled() ? new SearchResult(406, getString(R.string.DoNotTranslate), getString(R.string.Language), R.drawable.msg2_language, () -> f.presentFragment(new LanguageSelectActivity())).withLink("tg://settings/language/do-not-translate") : null,
-
-                    new SearchResult(402, getString(R.string.AskAQuestion), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> f.showDialog(AlertsCreator.createSupportAlert(f, null))).withLink("tg://settings/ask-question"),
-                    new SearchResult(403, getString(R.string.TelegramFAQ), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.TelegramFaqUrl))).withLink("tg://settings/faq"),
-                    new SearchResult(404, getString(R.string.PrivacyPolicy), getString(R.string.SettingsHelp), R.drawable.msg2_help, () -> Browser.openUrl(f.getParentActivity(), getString(R.string.PrivacyPolicyUrl))).withLink("tg://settings/privacy-policy"),
             };
         }
 
@@ -15675,7 +15669,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             put(++pointer, questionRow, sparseIntArray);
             put(++pointer, faqRow, sparseIntArray);
             put(++pointer, policyRow, sparseIntArray);
-            put(++pointer, owpengramRow, sparseIntArray);
             put(++pointer, helpSectionCell, sparseIntArray);
             put(++pointer, debugHeaderRow, sparseIntArray);
             put(++pointer, sendLogsRow, sparseIntArray);

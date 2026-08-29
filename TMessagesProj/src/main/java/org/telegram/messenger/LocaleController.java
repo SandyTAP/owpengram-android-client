@@ -3222,8 +3222,8 @@ public class LocaleController {
     }
 
     /**
-     * OwpenGram: cloud language packs are pulled from the server. This used to be
-     * disabled because official Telegram lang packs overwrote OwpenGram's branded
+     * LocalGram: cloud language packs are pulled from the server. This used to be
+     * disabled because official Telegram lang packs overwrote LocalGram's branded
      * strings with stock "Telegram" wording; the server now re-brands every
      * langpack string before serving it (see branding.UserVisibleText in
      * owpengram-server), so that risk no longer applies. Mirrors the desktop
