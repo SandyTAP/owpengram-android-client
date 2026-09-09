@@ -1300,7 +1300,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     }
 
     /**
-     * Routes a self-hosted LocalGram invite/username link to the account that owns its
+     * Routes a self-hosted SumeGram invite/username link to the account that owns its
      * host. If that account is already active, proceed; otherwise offer to switch to it
      * and re-handle the link. Mirrors routeTelegramLinkToTelegramAccount.
      */
@@ -1312,7 +1312,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             progress.end();
         }
         final OwpengramServer server = OwpengramServers.getServerForAccount(owpengramAccount);
-        final String name = (server != null && server.name != null) ? server.name : "LocalGram";
+        final String name = (server != null && server.name != null) ? server.name : "SumeGram";
         final Intent reintent = new Intent(intent);
         reintent.putExtra("currentAccount", owpengramAccount);
         try {
@@ -2081,7 +2081,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                     }
                                     return false;
                                 case "owpg": {
-                                    // LocalGram self-hosted scheme: owpg://<host>/<rest>. The host
+                                    // SumeGram self-hosted scheme: owpg://<host>/<rest>. The host
                                     // identifies which server (me_url_prefix) the link belongs to.
                                     // Reinterpret as https://<host>/<rest> and fall through to the
                                     // http/https handler, which routes it to the owning account.
@@ -2105,13 +2105,13 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                     String host = data.getHost().toLowerCase();
                                     Matcher prefixMatcher = PREFIX_T_ME_PATTERN.matcher(host);
                                     boolean isPrefix = prefixMatcher.find();
-                                    // LocalGram self-hosted invite/username link: the host matches an
+                                    // SumeGram self-hosted invite/username link: the host matches an
                                     // account's me_url_prefix and that server advertises owpengram=true.
                                     int owpengramAccount = OwpengramServers.findOwpengramAccountForHost(host);
                                     boolean isOwpengram = owpengramAccount >= 0;
                                     if (host.equals("telegram.me") || host.equals("t.me") || host.equals("telegram.dog") || isPrefix || isOwpengram) {
                                         if (isOwpengram) {
-                                            // Route on the LocalGram account that owns this host (switch if needed).
+                                            // Route on the SumeGram account that owns this host (switch if needed).
                                             if (!routeOwpengramLinkToOwpengramAccount(owpengramAccount, intent, intentAccount, progress)) {
                                                 return false;
                                             }

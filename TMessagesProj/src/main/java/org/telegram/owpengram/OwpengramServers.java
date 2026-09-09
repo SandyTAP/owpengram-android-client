@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.MessagesController;
@@ -25,29 +27,29 @@ public class OwpengramServers {
 
     public static final String ID_OWPENGRAM = "owpengram";
     public static final String ID_TELEGRAM  = "telegram";
-    public static final String ID_LOCALGRAM = "localgram";
+    public static final String ID_SUMEGRAM = "sumegram";
 
-    /** Public repository of the LocalGram server, opened from the settings entry. */
+    /** Public repository of the SumeGram server, opened from the settings entry. */
     public static final String SERVER_REPO_URL = "https://github.com/owpengram/owpengram-server";
 
-    private static final String DEFAULT_HOST = "152.89.254.50";
+    private static final String DEFAULT_HOST = "2.27.98.189";
     private static final int    DEFAULT_PORT = 2398;
 
-    // LocalGram's own production server RSA key.
+    // SumeGram's own production server RSA key.
     static final String OWPENGRAM_RSA_KEY =
-        "-----BEGIN RSA PUBLIC KEY-----\n" +
-        "MIIBCgKCAQEAxUi0fsjiop7kTI+c+ATHwIs+XPcircj9WL/tNASH45/phiIvxhPU\n" +
-        "z4T6OgUfDVpQEC8SWCuq77aZAhnpZ0rfQ+h6vEv7X970wIAPT/hbyzekyWEFmH5Q\n" +
-        "RxSPrOMKF/V0wuTOVJcoHZW5r5cK7xsVe/otdYdOgt67kITS7pqoO1BlstRuOEHL\n" +
-        "jhaJ/40dXocrWpDQlJP2TZFwk5JF1Pbx/2mLr/asQapc/qbQP82b+iDLW8QIBT0f\n" +
-        "+xi4Js4k7Qo9kZSuUHUCDzmJt6Z0USBxxp/tSZRVjWRaT9ORDrdyfb/mKFSt9BtC\n" +
-        "B5VRJ1e0q7P/9/w21T0p9uV3eNXhnPnLFQIDAQAB\n" +
-        "-----END RSA PUBLIC KEY-----";
+            "-----BEGIN RSA PUBLIC KEY-----\n" +
+                    "MIIBCgKCAQEA1RetzS3Xv+gblLzuG+o0lm+bPUxyUShEj6ng7n8Ctbq7AmXt2Mja\n" +
+                    "wv19XRnwDe/dmzbHplDXvxzKAtWKSzJ0Hc1nw8gOVKxVIQY/MG/UaMxwFPOpkbGR\n" +
+                    "4s2uQuG/Xwxo+vrZPTJ7DqttaRbXgA4eQVRC8aVw0P7K5LxH/MFH7cA+AD3de2O3\n" +
+                    "PWWM4npozB9CxEAJkvSOMKnCWZ6ozcU3fkDCbScsxMTAVYMGnL7LP4/0JErC0mMm\n" +
+                    "V9KeepVn6SoahV8n0CcPvpaK/DUinrvNqTcz3Rkb++IitJvkCpufz8LAnix5tP3Q\n" +
+                    "qOT+Nn2SWjUpyxRDPgkuAs3dznS9cuFvBQIDAQAB\n" +
+                    "-----END RSA PUBLIC KEY-----";
     // fingerprint == 0 -> native layer derives it from the PEM (see ConnectionsManager::applyServerConfig).
     static final long OWPENGRAM_RSA_FINGERPRINT = 0;
 
-    // LocalGram's own self-hosted server RSA key.
-    static final String LOCALGRAM_RSA_KEY =
+    // SumeGram's own self-hosted server RSA key.
+    static final String SUMEGRAM_RSA_KEY =
         "-----BEGIN RSA PUBLIC KEY-----\n" +
         "MIIBCgKCAQEAwwXTIUP6C632tGIPmQmxanAy+0MErbbMG/kHqmGg8DEpjPOR1Zj8\n" +
         "t3W+xHper8QPvjEs1Cdlmonmb9LX9LxAQEGEp7LRK8DOH+0y9HIGuc0tntcPspzk\n" +
@@ -57,7 +59,7 @@ public class OwpengramServers {
         "pNSgid1Sheqoxw2pSy51X+ChJssNKq2hIQIDAQAB\n" +
         "-----END RSA PUBLIC KEY-----";
     // fingerprint == 0 -> native layer derives it from the PEM.
-    static final long LOCALGRAM_RSA_FINGERPRINT = 0;
+    static final long SUMEGRAM_RSA_FINGERPRINT = 0;
 
     // Official Telegram production RSA key (restored from original Android source)
     static final String TELEGRAM_RSA_KEY =
@@ -76,8 +78,8 @@ public class OwpengramServers {
     public static OwpengramServer owpengramServer() {
         OwpengramServer s = new OwpengramServer();
         s.id                 = ID_OWPENGRAM;
-        s.name               = "LocalGram";
-        s.description        = "This is a test LocalGram server.";
+        s.name               = "SumeGram";
+        s.description        = "This is a test SumeGram server.";
         s.host               = DEFAULT_HOST;
         s.port               = DEFAULT_PORT;
         s.isOfficial         = true;
@@ -105,19 +107,20 @@ public class OwpengramServers {
         return s;
     }
 
-    public static OwpengramServer localgramServer() {
+
+    public static OwpengramServer sumegramServer() {
         OwpengramServer s = new OwpengramServer();
-        s.id                 = ID_LOCALGRAM;
-        s.name               = "LocalGram";
-        s.description        = "Testt self-hosted LocalGram server.";
-        s.host               = "192.168.0.100";
+        s.id                 = ID_SUMEGRAM;
+        s.name               = "SumeGram";
+        s.description        = "This is a offical SumeGram server.";
+        s.host               = "";
         s.port               = 2398;
         s.isOfficial         = true;
         s.isTelegram         = false;
         s.multiDc            = false;
         s.mainDcId           = 2;
-        s.rsaPublicKey       = LOCALGRAM_RSA_KEY;
-        s.rsaKeyFingerprint  = LOCALGRAM_RSA_FINGERPRINT;
+        s.rsaPublicKey       = SUMEGRAM_RSA_KEY;
+        s.rsaKeyFingerprint  = SUMEGRAM_RSA_FINGERPRINT;
         return s;
     }
 
@@ -127,7 +130,7 @@ public class OwpengramServers {
         List<OwpengramServer> result = new ArrayList<>();
         result.add(telegramServer());
         result.add(owpengramServer());
-        result.add(localgramServer());
+        //result.add(sumegramServer());
         result.addAll(loadCustomServers());
         return result;
     }
@@ -266,7 +269,7 @@ public class OwpengramServers {
     /**
      * Whether the account's current server is the official Telegram network.
      * Used to hide Telegram-specific help entries (Ask a Question, Telegram FAQ /
-     * Features, Privacy Policy) on LocalGram and other servers, where they don't apply.
+     * Features, Privacy Policy) on SumeGram and other servers, where they don't apply.
      */
     public static boolean serverIsOfficialTelegram(int accountNum) {
         OwpengramServer s = getServerForAccount(accountNum);

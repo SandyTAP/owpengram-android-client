@@ -715,7 +715,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(UItem.asShadow(null));
 
         // Only show the Premium section (Premium/Stars/TON/Business/Gift) for servers
-        // that implement these features (Telegram). LocalGram and custom
+        // that implement these features (Telegram). SumeGram and custom
         // single-servers don't, so hide the whole block there.
         boolean serverPremium = org.telegram.owpengram.OwpengramServers.serverSupportsPremium(currentAccount);
         if (serverPremium && !getMessagesController().premiumFeaturesBlocked()) {
@@ -957,7 +957,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             //APP VERSION HERE
             versionName += "_O6";
 
-            return "LocalGram " + String.format(Locale.US, "v%s (%d)\n%s", versionName, code, abi);
+            return "SumeGram " + String.format(Locale.US, "v%s (%d)\n%s", versionName, code, abi);
         } catch (Exception e) {
             FileLog.e(e);
         }
