@@ -111,10 +111,10 @@ public class OwpengramServers {
     public static OwpengramServer sumegramServer() {
         OwpengramServer s = new OwpengramServer();
         s.id                 = ID_SUMEGRAM;
-        s.name               = "SumeGram";
-        s.description        = "This is a offical SumeGram server.";
-        s.host               = "";
-        s.port               = 2398;
+        s.name               = "SumeGram Test";
+        s.description        = "Test server. Only for testers.";
+        s.host               = DEFAULT_HOST;
+        s.port               = 2399;
         s.isOfficial         = true;
         s.isTelegram         = false;
         s.multiDc            = false;
@@ -130,7 +130,7 @@ public class OwpengramServers {
         List<OwpengramServer> result = new ArrayList<>();
         result.add(telegramServer());
         result.add(owpengramServer());
-        //result.add(sumegramServer());
+        result.add(sumegramServer());
         result.addAll(loadCustomServers());
         return result;
     }
