@@ -50,14 +50,14 @@ public class OwpengramServers {
 
     // SumeGram's own self-hosted server RSA key.
     static final String SUMEGRAM_RSA_KEY =
-        "-----BEGIN RSA PUBLIC KEY-----\n" +
-        "MIIBCgKCAQEAwwXTIUP6C632tGIPmQmxanAy+0MErbbMG/kHqmGg8DEpjPOR1Zj8\n" +
-        "t3W+xHper8QPvjEs1Cdlmonmb9LX9LxAQEGEp7LRK8DOH+0y9HIGuc0tntcPspzk\n" +
-        "6sC6giN5eVdUD8f74IUfEawbjuhu4E3P9BQyDqZ78KD6lgmHeX5dH4VTGKD2pcuB\n" +
-        "OHzD7LsGq+0NXAJGCCY0edGF9wRRQTsgGL+hjYZhwuu72/06/d32+ZdaIBIlqorg\n" +
-        "0WNO7CbIWqPimQAOEfRIky9kPze+olTmk1kbYWY8w4rZTYVE7xMbzOEO4mMlAncJ\n" +
-        "pNSgid1Sheqoxw2pSy51X+ChJssNKq2hIQIDAQAB\n" +
-        "-----END RSA PUBLIC KEY-----";
+            "-----BEGIN RSA PUBLIC KEY-----\n" +
+            "MIIBCgKCAQEAtjWhUFH6KfmrdFySSb3CORowbtVEB1fZd4Cr1eOtAxXFEJcfioy5\n" +
+            "p+v4R0LyQmXUH4FcsBT50ECWwj6BdGgpQSprZD51jD+kLVf56/tpGC20kOQyJgmK\n" +
+            "1NnLzVxCao3eMEPC2ZXlgLpB3Q37a+SnhX6zhLvyVJEfs5uom58r9A46K2e8T1Cz\n" +
+            "/UNWWQLMPxN0jt/Xdwz/J3rcggMnVxJ1O+V3RFl9f07Ur+pqFG0mVxRUxKF38N31\n" +
+            "9Wfimwq6syGSaKL4ZoOyGf6v/vqzC4qgb2vMtfmlJ1GDNfpUQjaDo4t/NAIHmhH6\n" +
+            "ErfaWIm9PgvRoEGc/YII5DfYRiuj4uFC3wIDAQAB\n" +
+            "-----END RSA PUBLIC KEY-----";
     // fingerprint == 0 -> native layer derives it from the PEM.
     static final long SUMEGRAM_RSA_FINGERPRINT = 0;
 
@@ -114,7 +114,7 @@ public class OwpengramServers {
         s.name               = "SumeGram Test";
         s.description        = "Test server. Only for testers.";
         s.host               = DEFAULT_HOST;
-        s.port               = 2399;
+        s.port               = 2498;
         s.isOfficial         = true;
         s.isTelegram         = false;
         s.multiDc            = false;
