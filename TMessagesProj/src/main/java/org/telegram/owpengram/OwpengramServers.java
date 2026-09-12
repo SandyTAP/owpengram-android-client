@@ -79,7 +79,7 @@ public class OwpengramServers {
         OwpengramServer s = new OwpengramServer();
         s.id                 = ID_OWPENGRAM;
         s.name               = "SumeGram";
-        s.description        = "This is a test SumeGram server.";
+        s.description        = "This is a SumeGram server.";
         s.host               = DEFAULT_HOST;
         s.port               = DEFAULT_PORT;
         s.isOfficial         = true;
