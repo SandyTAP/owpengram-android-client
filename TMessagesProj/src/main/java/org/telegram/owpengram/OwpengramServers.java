@@ -25,41 +25,27 @@ public class OwpengramServers {
     private static final String KEY_CUSTOM_SERVERS = "custom_servers";
     private static final String KEY_ACCOUNT_SERVER = "account_server_";
 
-    public static final String ID_OWPENGRAM = "owpengram";
     public static final String ID_TELEGRAM  = "telegram";
-    public static final String ID_SUMEGRAM = "sumegram";
+    public static final String ID_XIROGRAM = "xirogram";
 
-    /** Public repository of the SumeGram server, opened from the settings entry. */
+    /** Public repository of the XiroGram server, opened from the settings entry. */
     public static final String SERVER_REPO_URL = "https://github.com/owpengram/owpengram-server";
 
-    private static final String DEFAULT_HOST = "2.27.98.189";
+    private static final String DEFAULT_HOST = "150.241.85.49";
     private static final int    DEFAULT_PORT = 2398;
 
-    // SumeGram's own production server RSA key.
-    static final String OWPENGRAM_RSA_KEY =
+    // XiroGram's production server RSA key.
+    static final String XIROGRAM_RSA_KEY =
             "-----BEGIN RSA PUBLIC KEY-----\n" +
-                    "MIIBCgKCAQEA1RetzS3Xv+gblLzuG+o0lm+bPUxyUShEj6ng7n8Ctbq7AmXt2Mja\n" +
-                    "wv19XRnwDe/dmzbHplDXvxzKAtWKSzJ0Hc1nw8gOVKxVIQY/MG/UaMxwFPOpkbGR\n" +
-                    "4s2uQuG/Xwxo+vrZPTJ7DqttaRbXgA4eQVRC8aVw0P7K5LxH/MFH7cA+AD3de2O3\n" +
-                    "PWWM4npozB9CxEAJkvSOMKnCWZ6ozcU3fkDCbScsxMTAVYMGnL7LP4/0JErC0mMm\n" +
-                    "V9KeepVn6SoahV8n0CcPvpaK/DUinrvNqTcz3Rkb++IitJvkCpufz8LAnix5tP3Q\n" +
-                    "qOT+Nn2SWjUpyxRDPgkuAs3dznS9cuFvBQIDAQAB\n" +
-                    "-----END RSA PUBLIC KEY-----";
-    // fingerprint == 0 -> native layer derives it from the PEM (see ConnectionsManager::applyServerConfig).
-    static final long OWPENGRAM_RSA_FINGERPRINT = 0;
-
-    // SumeGram's own self-hosted server RSA key.
-    static final String SUMEGRAM_RSA_KEY =
-            "-----BEGIN RSA PUBLIC KEY-----\n" +
-            "MIIBCgKCAQEAtjWhUFH6KfmrdFySSb3CORowbtVEB1fZd4Cr1eOtAxXFEJcfioy5\n" +
-            "p+v4R0LyQmXUH4FcsBT50ECWwj6BdGgpQSprZD51jD+kLVf56/tpGC20kOQyJgmK\n" +
-            "1NnLzVxCao3eMEPC2ZXlgLpB3Q37a+SnhX6zhLvyVJEfs5uom58r9A46K2e8T1Cz\n" +
-            "/UNWWQLMPxN0jt/Xdwz/J3rcggMnVxJ1O+V3RFl9f07Ur+pqFG0mVxRUxKF38N31\n" +
-            "9Wfimwq6syGSaKL4ZoOyGf6v/vqzC4qgb2vMtfmlJ1GDNfpUQjaDo4t/NAIHmhH6\n" +
-            "ErfaWIm9PgvRoEGc/YII5DfYRiuj4uFC3wIDAQAB\n" +
+            "MIIBCgKCAQEAu2NjyZFmSDYEwTYYWsKkvyOxJRCCtvNI5uMW8Zo2B2/9LpgfbLgR\n" +
+            "h1GUQAFENcALPa+oxF1nNwFC36xPM0Na8Azq4TEqnfI79y8EFt6tmHjsXK0aq+Cr\n" +
+            "ifC/WL4sEKIabo8pLwdoMiFu1iDlmUbb4SSAJba5IUfwZ/CfW4BJPhy3GB8TtJ9X\n" +
+            "GYAFN52l77Hic+O0YSYeVTKuh2armebpl1hjmryTCWch2YcEMjV45C1psjc6bzAn\n" +
+            "nnU6xedBRZeQI90JQXyoVEIfNclpTpfvA8wOoXQ07MPNw79FPmvKxL64pWyhfRFd\n" +
+            "ShdBhemM5ES6mIeahRiWxQp4B0IjJ4e8QQIDAQAB\n" +
             "-----END RSA PUBLIC KEY-----";
-    // fingerprint == 0 -> native layer derives it from the PEM.
-    static final long SUMEGRAM_RSA_FINGERPRINT = 0;
+    // fingerprint == 0 -> native layer derives it from the PEM (see ConnectionsManager::applyServerConfig).
+    static final long XIROGRAM_RSA_FINGERPRINT = 0;
 
     // Official Telegram production RSA key (restored from original Android source)
     static final String TELEGRAM_RSA_KEY =
@@ -75,19 +61,19 @@ public class OwpengramServers {
 
     // --- Built-in servers ---
 
-    public static OwpengramServer owpengramServer() {
+    public static OwpengramServer xirogramServer() {
         OwpengramServer s = new OwpengramServer();
-        s.id                 = ID_OWPENGRAM;
-        s.name               = "SumeGram";
-        s.description        = "This is a SumeGram server.";
+        s.id                 = ID_XIROGRAM;
+        s.name               = "XiroGram";
+        s.description        = "This is a XiroGram server.";
         s.host               = DEFAULT_HOST;
         s.port               = DEFAULT_PORT;
         s.isOfficial         = true;
         s.isTelegram         = false;
         s.multiDc            = false;
         s.mainDcId           = 2;
-        s.rsaPublicKey       = OWPENGRAM_RSA_KEY;
-        s.rsaKeyFingerprint  = OWPENGRAM_RSA_FINGERPRINT;
+        s.rsaPublicKey       = XIROGRAM_RSA_KEY;
+        s.rsaKeyFingerprint  = XIROGRAM_RSA_FINGERPRINT;
         return s;
     }
 
@@ -107,30 +93,12 @@ public class OwpengramServers {
         return s;
     }
 
-
-    public static OwpengramServer sumegramServer() {
-        OwpengramServer s = new OwpengramServer();
-        s.id                 = ID_SUMEGRAM;
-        s.name               = "SumeGram Test";
-        s.description        = "Test server. Only for testers.";
-        s.host               = DEFAULT_HOST;
-        s.port               = 2498;
-        s.isOfficial         = true;
-        s.isTelegram         = false;
-        s.multiDc            = false;
-        s.mainDcId           = 2;
-        s.rsaPublicKey       = SUMEGRAM_RSA_KEY;
-        s.rsaKeyFingerprint  = SUMEGRAM_RSA_FINGERPRINT;
-        return s;
-    }
-
     // --- Server list ---
 
     public static List<OwpengramServer> listServers() {
         List<OwpengramServer> result = new ArrayList<>();
         result.add(telegramServer());
-        result.add(owpengramServer());
-        result.add(sumegramServer());
+        result.add(xirogramServer());
         result.addAll(loadCustomServers());
         return result;
     }
@@ -269,7 +237,7 @@ public class OwpengramServers {
     /**
      * Whether the account's current server is the official Telegram network.
      * Used to hide Telegram-specific help entries (Ask a Question, Telegram FAQ /
-     * Features, Privacy Policy) on SumeGram and other servers, where they don't apply.
+     * Features, Privacy Policy) on XiroGram and other servers, where they don't apply.
      */
     public static boolean serverIsOfficialTelegram(int accountNum) {
         OwpengramServer s = getServerForAccount(accountNum);
@@ -340,9 +308,9 @@ public class OwpengramServers {
             key = server.rsaPublicKey;
             fingerprint = (server.rsaKeyFingerprint != 0) ? server.rsaKeyFingerprint : 0;
         } else {
-            // No key provided -> shared default owpengram key (fingerprint known).
-            key = OWPENGRAM_RSA_KEY;
-            fingerprint = OWPENGRAM_RSA_FINGERPRINT;
+            // No key provided -> shared default XiroGram key (fingerprint known).
+            key = XIROGRAM_RSA_KEY;
+            fingerprint = XIROGRAM_RSA_FINGERPRINT;
         }
         int mainDc = server.mainDcId > 0
                 ? server.mainDcId
