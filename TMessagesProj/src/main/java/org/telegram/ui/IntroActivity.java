@@ -407,10 +407,9 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 return;
             }
             startPressed = true;
-            presentFragment(new ServerSelectFragment());
-            // Reset so the button works again if the user navigates back from the
-            // server picker (ServerSelectFragment is pushed on top, not finishing intro).
-            startPressed = false;
+            // XiroGram is the only backend, so there is no server picker: connect to
+            // XiroGram and go straight to the login screen.
+            XiroGramLogin.startLogin(this, -1);
         });
 
         bottomPages = new BottomPagesView(context, viewPager, 6);

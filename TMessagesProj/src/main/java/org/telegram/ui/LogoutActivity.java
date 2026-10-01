@@ -120,11 +120,11 @@ public class LogoutActivity extends BaseFragment {
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener((view, position, x, y) -> {
             if (position == addAccountRow) {
-                // Any account (custom server) may use any free slot; the premium cap
-                // is enforced per-server (Telegram only) in ServerSelectFragment.
+                // Every account lives on XiroGram, so the premium Telegram cap never
+                // applies here — only the total slot count matters.
                 int availableAccount = org.telegram.owpengram.OwpengramServers.firstFreeAccountSlot();
                 if (availableAccount >= 0) {
-                    presentFragment(new ServerSelectFragment(availableAccount));
+                    XiroGramLogin.startLogin(this, availableAccount);
                 } else {
                     LimitReachedBottomSheet limitReachedBottomSheet = new LimitReachedBottomSheet(this, getContext(), TYPE_ACCOUNTS, currentAccount, null);
                     showDialog(limitReachedBottomSheet);

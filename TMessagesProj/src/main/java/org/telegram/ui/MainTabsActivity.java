@@ -510,11 +510,11 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         ItemOptions o = ItemOptions.makeOptions(this, button);
         if (UserConfig.getActivatedAccountsCount() < UserConfig.MAX_ACCOUNT_COUNT) {
             o.add(R.drawable.msg_addbot, getString(R.string.AddAccount), () -> {
-                // Any account (custom server) may use any free slot; the premium cap
-                // is enforced per-server (Telegram only) in ServerSelectFragment.
+                // Every account lives on XiroGram, so the premium Telegram cap never
+                // applies here — only the total slot count matters.
                 int availableAccount = org.telegram.owpengram.OwpengramServers.firstFreeAccountSlot();
                 if (availableAccount >= 0) {
-                    presentFragment(new ServerSelectFragment(availableAccount));
+                    XiroGramLogin.startLogin(this, availableAccount);
                 } else {
                     showDialog(new LimitReachedBottomSheet(this, getContext(), TYPE_ACCOUNTS, currentAccount, null));
                 }

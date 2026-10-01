@@ -14,6 +14,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -153,6 +155,12 @@ import me.vkryl.android.animator.FactorAnimator;
 public class SettingsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, ImageUpdater.ImageUpdaterDelegate, MainTabsActivity.TabFragmentDelegate, FactorAnimator.Target {
 
     private static final int ANIMATOR_ID_SEARCH_PAGE_VISIBLE = 0;
+
+    // Settings row linking to the app's author channel. Hard-coded rather than
+    // string-resourced: it's a branding/attribution contact, not UI copy that needs
+    // translating.
+    private static final String AUTHOR_CONTACT_TITLE = "by @sandytapowner";
+    private static final String AUTHOR_CONTACT_URL = "https://t.me/sandytapowner";
 
     private final BoolAnimator animatorSearchPageVisible = new BoolAnimator(ANIMATOR_ID_SEARCH_PAGE_VISIBLE,
             this, CubicBezierInterpolator.EASE_OUT_QUINT, 350);
@@ -711,6 +719,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(SettingCell.Factory.of(8, IconBackgroundColors.CYAN.top, IconBackgroundColors.CYAN.bottom, R.drawable.settings_devices, getString(R.string.SettingsDevices), getString(R.string.SettingsDevicesInfo)));
         items.add(SettingCell.Factory.of(9, IconBackgroundColors.ORANGE_DEEP.top, IconBackgroundColors.ORANGE_DEEP.bottom, R.drawable.settings_power, getString(R.string.SettingsPowerSaving), getString(R.string.SettingsPowerSavingInfo)));
         items.add(SettingCell.Factory.of(10, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.settings_language, getString(R.string.SettingsLanguage), LocaleController.getCurrentLanguageName()));
+        items.add(SettingCell.Factory.of(24, 0xFF2AABEE, 0xFF1C87C9, R.drawable.settings_gram_24, AUTHOR_CONTACT_TITLE));
 
         items.add(UItem.asShadow(null));
 
@@ -895,6 +904,35 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 }
                 break;
             }
+            case 24:
+                openAuthorContact();
+                break;
+        }
+    }
+
+    /**
+     * Opens the author channel in the user's own browser.
+     *
+     * Deliberately not Browser.openUrl(): t.me links are classified as internal by
+     * Browser.isInternalUri() (a profile link must open as an in-app page), and
+     * Browser.openUrlInSystemBrowser() honours that too, so both would show the
+     * in-app profile instead of a browser. A bare ACTION_VIEW carrying
+     * CATEGORY_BROWSABLE bypasses that routing — only a browser can match it — which
+     * is what this attribution link wants. Falls back to Browser if the device has no
+     * browser at all to resolve the intent.
+     */
+    private void openAuthorContact() {
+        if (getParentActivity() == null) {
+            return;
+        }
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(AUTHOR_CONTACT_URL));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getParentActivity().startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Browser.openUrl(getContext(), AUTHOR_CONTACT_URL);
         }
     }
 

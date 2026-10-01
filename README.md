@@ -23,48 +23,32 @@ to use, and free from lock-in.
 
 ## ✨ Why you'll like it
 
-- 🌐 **Multi-server** — add accounts on different servers and switch between them freely.
-- 🏠 **Bring your own server** — connect to a server you host and fully control.
+- 🌐 **No server picking** — the app connects to XiroGram on its own, every time.
+- 🏠 **Your own infrastructure** — XiroGram is self-hosted and fully under your control.
 - 🧠 **Familiar & comfortable** — the experience you already know, no learning curve.
 - 🔒 **Private** — talk on infrastructure you trust, away from the cloud.
 - 🛡️ **Censorship-resistant** — your own server stays reachable when others are blocked.
 - 🆓 **Open source** — read it, audit it, build it yourself.
 
-## 🌐 How multi-server works
+## 🌐 Connecting
 
-Every account is tied to a server, and you choose that server when you sign in.
-OwpenGram comes with ready-to-use options:
+There is no server to choose. XiroGram is the app's only backend, so every
+account slot is bound to it automatically as soon as you start signing in — first
+launch, adding a second account, or logging back in after a sign-out. The MTProto
+handshake happens in the background; an unreachable server never blocks the login
+screen.
 
-- **Telegram** — the official network (use your normal Telegram account)
-- **OwpenGram** — the project's public server
-- **Custom** — any server you or your community runs
-
-Add several accounts on different servers and they stay cleanly separated —
-different identities, different data, one app.
+Add several accounts and they stay cleanly separated — different identities,
+different data, one app.
 
 <p align="center">
-  <img src="media/readme/android_multiserver.png" alt="Choose a server, and accounts grouped by server" width="620">
+  <img src="media/readme/android_multiserver.png" alt="Accounts grouped by server" width="620">
 </p>
 
-## 🔌 Connect your own server
+The endpoint is built in (`150.241.85.49:2398`, MTProto port `2398`) with the
+server's RSA public key, so no configuration is needed.
 
-On the **server selection screen** (shown when you log in or add a new account),
-tap **➕ Add server** and fill in:
-
-- **Name** — any label you like (e.g. *My Server*)
-- **Host / IP address** — your server's IP or domain (e.g. `203.0.113.10` or `chat.example.com`)
-- **Port** — `2398` (the default OwpenGram MTProto port)
-- **Multi-DC mode** — leave **OFF** for a self-hosted server (turn ON only for true multi-datacenter, Telegram-style networks)
-- **Main data center** — leave as `2` (the default) for a self-hosted server
-- **RSA Public Key (PEM)** — leave **empty** unless your server uses a custom key
-
-Then save, select the server, and log in as usual.
-
-> The default OwpenGram server key is already built in, so the RSA field stays
-> blank in almost all cases. Only paste a PEM public key if the server operator
-> replaced the server's key with their own.
-
-Don't have a server yet? Spin one up in one command:
+Run your own instance of the server:
 👉 [owpengram-server](https://github.com/owpengram/owpengram-server)
 
 ## 🛠️ Build (Windows)

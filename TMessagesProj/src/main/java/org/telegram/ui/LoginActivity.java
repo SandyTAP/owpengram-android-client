@@ -329,12 +329,15 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
 
     @ViewNumber
     private int currentViewNum;
-    // Set by ServerSelectFragment (via setEmailSignupEnabled) right after it
-    // learns the chosen server advertises email_signup_enabled=true in its
-    // help.getAppConfig — before this activity's view is created, so
-    // createView's VIEW_PHONE_INPUT slot can be given an EmailSignupView
-    // instead of the normal PhoneView. See EmailSignupView below.
+    // Set by XiroGramLogin (via setEmailSignupEnabled) from the account's
+    // cached help.getAppConfig `email_signup_enabled` before this activity's view is
+    // created, so createView's VIEW_PHONE_INPUT slot can be given an EmailSignupView
+    // instead of the normal PhoneView. See EmailSignupView below. The cache is stale
+    // (or absent) on a fresh install, so checkRemoteEmailSignupState() re-asks the
+    // server afterwards and swaps the view in-place if it turns out to be required.
     private boolean emailSignupEnabled;
+    // Whether checkRemoteEmailSignupState() already ran for this fragment.
+    private boolean emailSignupStateRequested;
     private final SlideView[] views = new SlideView[20];
     private CustomPhoneKeyboardView keyboardView;
     private ValueAnimator keyboardAnimator;
@@ -854,7 +857,95 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
             fillNextCodeParams(cancelDeletionParams, cancelDeletionCode, false);
         }
 
+        checkRemoteEmailSignupState();
+
         return fragmentView;
+    }
+
+    /**
+     * Asks the server whether it uses email instead of a phone number as the account
+     * identity. The client normally learns this from the cached appConfig before the
+     * view is built (see {@link #emailSignupEnabled}), but on a fresh install there
+     * is no cache yet, so the phone view is built first and swapped here if the
+     * answer arrives while the user still hasn't typed anything.
+     *
+     * Uses a raw help.getAppConfig: MessagesController.loadAppConfig()'s cache fetcher
+     * doesn't set the unauthenticated-request flags this needs pre-login. Same request
+     * the app already sends after login, so it doubles as a warm-up of the connection.
+     */
+    private void checkRemoteEmailSignupState() {
+        if (emailSignupStateRequested || emailSignupEnabled || activityMode != MODE_LOGIN) {
+            return;
+        }
+        if (currentViewNum != VIEW_PHONE_INPUT || !(views[VIEW_PHONE_INPUT] instanceof PhoneView)) {
+            return;
+        }
+        emailSignupStateRequested = true;
+
+        final int account = currentAccount;
+        TLRPC.TL_help_getAppConfig req = new TLRPC.TL_help_getAppConfig();
+        req.hash = 0;
+        ConnectionsManager.getInstance(account).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+            if (isFinished || emailSignupEnabled || response == null) {
+                return;
+            }
+            boolean enabled = false;
+            if (response instanceof TLRPC.TL_help_appConfig) {
+                TLRPC.JSONValue config = ((TLRPC.TL_help_appConfig) response).config;
+                if (config instanceof TLRPC.TL_jsonObject) {
+                    for (TLRPC.TL_jsonObjectValue entry : ((TLRPC.TL_jsonObject) config).value) {
+                        if ("email_signup_enabled".equals(entry.key) && entry.value instanceof TLRPC.TL_jsonBool) {
+                            enabled = ((TLRPC.TL_jsonBool) entry.value).value;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (enabled) {
+                swapToEmailSignupView();
+            }
+        }), ConnectionsManager.RequestFlagWithoutLogin | ConnectionsManager.RequestFlagEnableUnauthorized | ConnectionsManager.RequestFlagFailOnServerErrors);
+    }
+
+    /**
+     * Replaces the PhoneView in VIEW_PHONE_INPUT with an EmailSignupView in place,
+     * for when the server turned out to require an email after the login screen was
+     * already built. Deliberately a no-op once the user has entered anything: we
+     * would throw that away, and PhoneView can fall back to the phone screen itself
+     * through EmailSignupView's "log in with phone number instead" link anyway.
+     */
+    private void swapToEmailSignupView() {
+        if (isFinished || activityMode != MODE_LOGIN || currentViewNum != VIEW_PHONE_INPUT) {
+            return;
+        }
+        if (!(views[VIEW_PHONE_INPUT] instanceof PhoneView)) {
+            return;
+        }
+        PhoneView phoneView = (PhoneView) views[VIEW_PHONE_INPUT];
+        if (phoneView.getTypedText().length() > 0 || restoringState) {
+            return;
+        }
+        Activity activity = getParentActivity();
+        if (activity == null) {
+            return;
+        }
+
+        emailSignupEnabled = true;
+        // Hide before swapping so PhoneView.onHide() unhooks its NotificationCenter
+        // observer and drops the custom keyboard.
+        phoneView.onHide();
+        phoneView.setVisibility(View.GONE);
+        slideViewsContainer.removeView(phoneView);
+
+        EmailSignupView emailView = new EmailSignupView(activity);
+        emailView.setLayoutParams(phoneView.getLayoutParams());
+        views[VIEW_PHONE_INPUT] = emailView;
+        slideViewsContainer.addView(emailView);
+        emailView.setVisibility(View.VISIBLE);
+        emailView.onShow();
+        emailView.updateColors();
+        setCustomKeyboardVisible(false, true);
+        setParentActivityTitle(emailView.getHeaderName());
     }
 
     private boolean isCustomKeyboardForceDisabled() {
@@ -3683,6 +3774,18 @@ public class LoginActivity extends BaseFragment implements NotificationCenter.No
         @Override
         public String getHeaderName() {
             return getString("YourPhone", R.string.YourPhone);
+        }
+
+        /** Country-prefix + number as currently typed, for callers deciding whether this view is safe to discard. */
+        public CharSequence getTypedText() {
+            StringBuilder text = new StringBuilder();
+            if (codeField != null) {
+                text.append(codeField.getText());
+            }
+            if (phoneField != null) {
+                text.append(phoneField.getText());
+            }
+            return text;
         }
 
         @Override
